@@ -88,8 +88,15 @@ app.get('/u/:user', async (req, res) => {
       where: { author: user }
     });
 
-    res.json({ username: user.username, id: user.id, joinDate: user.joinDate, posts: posts });
+    let parsedPosts: {}[] = [];
+    const keys = Object.keys(posts);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      parsedPosts.push(await getPost(posts[key].id));
+    }
+    res.json({ username: user.username, id: user.id, joinDate: user.joinDate, posts: parsedPosts });
   } catch(err) {
+    console.log(err);
     res.status(500).json({ msg: 'Internal server error.' });
   }
 });
