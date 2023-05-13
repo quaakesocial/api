@@ -88,7 +88,7 @@ app.get('/u/:user', async (req, res) => {
       where: { author: user }
     });
 
-    res.json({ username: user.username, id: user.id, joinDate: user.joinDate, p>
+    res.json({ username: user.username, id: user.id, joinDate: user.joinDate, posts: posts });
   } catch(err) {
     res.status(500).json({ msg: 'Internal server error.' });
   }
