@@ -39,6 +39,47 @@ export async function getPost(id: string) {
   return {
     content: post.content,
     id: post.id,
+    loves: JSON.parse(post.loves),
     by: user.username
   }
+}
+
+export async function lovePost(id: string, token: string) {
+  const user = await whoami(token);
+  const username = user.username;
+
+  const post = await prisma.post.findUnique({
+    where: {
+      id
+    }
+  });
+
+  const loves = JSON.parse(post.loves);
+  loves.push(username);
+  await prisma.post.update({
+    where: { id },
+    data: {
+      loves: JSON.stringify(loves)
+    }
+  });
+}
+
+export async function unlovePost(id: string, token: string) {
+  const user = await whoami(token);
+  const username = user.username;
+
+  const post = await prisma.post.findUnique({
+    where: {
+      id
+    }
+  });
+
+  const loves = JSON.parse(post.loves);
+  loves.splice(loves.indexOf(username), 1)
+  await prisma.post.update({
+    where: { id },
+    data: {
+      loves: JSON.stringify(loves)
+    }
+  });
 }

@@ -19,6 +19,7 @@ model User {
 model Post {
   id         String     @id
   content    String
+  loves      String     @default("[]")
   author     User       @relation(fields: [authorId], references: [id])
   authorId   String
 }

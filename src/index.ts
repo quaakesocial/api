@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { register, login, whoami } from './utils/auth';
-import { createPost, getPost } from './utils/post';
+import { createPost, getPost, lovePost, unlovePost } from './utils/post';
 import prisma from './utils/db';
 import cors from 'cors';
 
@@ -72,6 +72,30 @@ app.get('/p/:id', async (req, res) => {
   try {
     const post = await getPost(id);
     res.json(post);
+  } catch(err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/p/:id/love', async (req, res) => {
+  const { id } = req.params;
+  const token = req.headers.authorization;
+
+  try {
+    await lovePost(id, token);
+    res.json(await getPost(id));
+  } catch(err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/p/:id/love', async (req, res) => {
+  const { id } = req.params;
+  const token = req.headers.authorization;
+
+  try {
+    await unlovePost(id, token);
+    res.json(await getPost(id))
   } catch(err) {
     res.status(500).json({ error: err.message });
   }
