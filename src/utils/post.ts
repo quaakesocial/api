@@ -46,7 +46,6 @@ export async function getPost(id: string) {
 
 export async function lovePost(id: string, token: string) {
   const user = await whoami(token);
-  const username = user.username;
 
   const post = await prisma.post.findUnique({
     where: {
@@ -55,7 +54,7 @@ export async function lovePost(id: string, token: string) {
   });
 
   const loves = JSON.parse(post.loves);
-  loves.push(username);
+  loves.push(user.id);
   await prisma.post.update({
     where: { id },
     data: {
@@ -66,7 +65,6 @@ export async function lovePost(id: string, token: string) {
 
 export async function unlovePost(id: string, token: string) {
   const user = await whoami(token);
-  const username = user.username;
 
   const post = await prisma.post.findUnique({
     where: {
@@ -75,7 +73,7 @@ export async function unlovePost(id: string, token: string) {
   });
 
   const loves = JSON.parse(post.loves);
-  loves.splice(loves.indexOf(username), 1)
+  loves.splice(loves.indexOf(user.id), 1)
   await prisma.post.update({
     where: { id },
     data: {
