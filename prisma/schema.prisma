@@ -20,6 +20,7 @@ model Post {
   id         String     @id
   content    String
   loves      String     @default("[]")
+  createDate DateTime   @default(now())
   author     User       @relation(fields: [authorId], references: [id])
   authorId   String
 }

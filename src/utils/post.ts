@@ -40,6 +40,7 @@ export async function getPost(id: string) {
     content: post.content,
     id: post.id,
     loves: JSON.parse(post.loves),
+    createDate: post.createDate,
     by: user.username
   }
 }
