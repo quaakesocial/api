@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { register, login, whoami } from './utils/auth';
 import { createPost, getPost, lovePost, unlovePost } from './utils/post';
+import { createComment } from './utils/comment';
 import prisma from './utils/db';
 import cors from 'cors';
 
@@ -96,6 +97,19 @@ app.delete('/p/:id/love', async (req, res) => {
   try {
     await unlovePost(id, token);
     res.json(await getPost(id))
+  } catch(err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/p/:id/comment', async (req, res) => {
+  const { id } = req.params;
+  const { content } = req.body;
+  const token = req.headers.authorization;
+
+  try {
+    await createComment(id, content, token);
+    res.json(await getPost(id));
   } catch(err) {
     res.status(500).json({ error: err.message });
   }

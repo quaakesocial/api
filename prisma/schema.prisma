@@ -14,6 +14,7 @@ model User {
   email      String   @unique
   joinDate   DateTime @default(now())
   posts      Post[]
+  comments   Comment[]
 }
 
 model Post {
@@ -21,6 +22,17 @@ model Post {
   content    String
   loves      String     @default("[]")
   createDate DateTime   @default(now())
+  Comments   Comment[]
   author     User       @relation(fields: [authorId], references: [id])
   authorId   String
+}
+
+model Comment {
+  id          String      @id
+  content     String
+  createDate  DateTime    @default(now())
+  author      User        @relation(fields: [authorId], references: [id])
+  authorId    String
+  post        Post        @relation(fields: [authorId], references: [id])
+  postId      String
 }
