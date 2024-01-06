@@ -123,7 +123,8 @@ app.get('/u/:user', async (req, res) => {
     });
 
     const posts = await prisma.post.findMany({
-      where: { author: user }
+      where: { author: user },
+      orderBy: { createDate: 'desc' }
     });
 
     let parsedPosts: {}[] = [];
