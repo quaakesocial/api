@@ -15,6 +15,8 @@ model User {
   joinDate   DateTime @default(now())
   posts      Post[]
   comments   Comment[]
+  admin      Boolean  @default(false)
+  banned     Boolean  @default(false)
 }
 
 model Post {
@@ -25,6 +27,8 @@ model Post {
   Comments   Comment[]
   author     User       @relation(fields: [authorId], references: [id])
   authorId   String
+  reported   Boolean    @default(false)
+  reason     String     @default("🍕 THIS IS A DEFAULT VALUE, IGNORE")
 }
 
 model Comment {

@@ -41,7 +41,8 @@ export async function getPost(id: string) {
     id: post.id,
     loves: JSON.parse(post.loves),
     createDate: post.createDate,
-    by: user.username
+    by: user.username,
+    reported: post.reported
   }
 }
 
@@ -81,4 +82,14 @@ export async function unlovePost(id: string, token: string) {
       loves: JSON.stringify(loves)
     }
   });
+}
+
+export async function reportPost(id: string, reason: string) {
+  await prisma.post.update({
+    where: { id },
+    data: {
+      reported: true,
+      reason
+    }
+  })
 }

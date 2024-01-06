@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { register, login, whoami } from './utils/auth';
-import { createPost, getPost, lovePost, unlovePost } from './utils/post';
+import { createPost, getPost, lovePost, unlovePost, reportPost } from './utils/post';
 import { createComment } from './utils/comment';
 import prisma from './utils/db';
 import cors from 'cors';
@@ -114,6 +114,21 @@ app.post('/p/:id/comment', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+app.post('/p/:id/report', async (req, res) => {
+  const { id } = req.params;
+  const { reason } = req.body;
+  if((await getPost(id)).reported == true) {
+    res.status(409).json({ error: 'already reported' })
+  } else {
+    try {
+      await reportPost(id, reason);
+      res.json(await getPost(id))
+    } catch(err) {
+      res.status(500).json({ error: err.message })
+    }
+  }
+})
 
 app.get('/u/:user', async (req, res) => {
   const { user: username } = req.body;
