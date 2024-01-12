@@ -68,7 +68,7 @@ export async function login(data: { username: string, password: string }): Promi
 }
 
 
-export async function whoami(token: string): Promise<{ id: string, email: string, username: string }> {
+export async function whoami(token: string): Promise<{ id: string, email: string, username: string, banned: boolean, admin: boolean }> {
   try {
     const decodedToken = jwt.verify(token, process.env.SECRET!) as { id: string };
     const user = await prisma.user.findUnique({
@@ -78,7 +78,9 @@ export async function whoami(token: string): Promise<{ id: string, email: string
       select: {
         id: true,
         email: true,
-        username: true
+        username: true,
+        admin: true,
+        banned: true
       }
     });
 
@@ -89,7 +91,9 @@ export async function whoami(token: string): Promise<{ id: string, email: string
     return {
       id: user.id,
       email: user.email,
-      username: user.username
+      username: user.username,
+      admin: user.admin,
+      banned: user.banned
     };
   } catch (error) {
     throw new Error('Invalid token.');

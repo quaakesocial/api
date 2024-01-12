@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
-  res.json({ name: 'quake-api', by: 'errplane' });
+  res.json({ name: 'quaake-api', by: 'errplane' });
 });
 
 app.post('/register', async (req, res) => {
