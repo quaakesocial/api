@@ -42,7 +42,8 @@ export async function getPost(id: string) {
     loves: JSON.parse(post.loves),
     createDate: post.createDate,
     by: user.username,
-    reported: post.reported
+    reported: post.reported,
+    comments: post
   }
 }
 
