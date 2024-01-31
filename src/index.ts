@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { register, login, whoami } from './utils/auth';
-import { createPost, getPost, lovePost, unlovePost, reportPost } from './utils/post';
+import { createPost, getPost, lovePost, unlovePost, reportPost, getPosts } from './utils/post';
 import { createComment } from './utils/comment';
 import prisma from './utils/db';
 import cors from 'cors';
@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
-  res.json({ name: 'quaake-api', by: 'errplane' });
+  res.json({ name: 'quaake-api', by: 'errplane', cool: 'yes' });
 });
 
 app.post('/register', async (req, res) => {
@@ -127,6 +127,18 @@ app.post('/p/:id/report', async (req, res) => {
     } catch(err) {
       res.status(500).json({ error: err.message })
     }
+  }
+})
+
+app.get('/getReportedPosts', async (req, res) => {
+  try {
+    if((await whoami(req.body.token)).admin == true) {
+      res.json(await getPosts());
+    } else {
+      res.json({ "msg": "lol ur not admin you noob" });
+    }
+  } catch(err) {
+    res.status(500).json({ error: err.message });
   }
 })
 

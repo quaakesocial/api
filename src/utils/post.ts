@@ -86,6 +86,7 @@ export async function unlovePost(id: string, token: string) {
 }
 
 export async function reportPost(id: string, reason: string) {
+  const a = reason || "no reason provided 🍕";
   await prisma.post.update({
     where: { id },
     data: {
@@ -93,4 +94,9 @@ export async function reportPost(id: string, reason: string) {
       reason
     }
   })
+}
+
+export async function getPosts() {
+  const posts = await prisma.post.findMany({ where: { reported: true } });
+  return posts;
 }
